@@ -1,20 +1,42 @@
+import React, { useState, useEffect } from 'react';
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import { ThemeProvider } from 'styled-components';
+import { 
+  useFonts, 
+  Aleo_400Regular,
+  Aleo_300Light_Italic,
+  Aleo_700Bold,
+  Aleo_300Light
+} from '@expo-google-fonts/aleo';
+import { OleoScript_400Regular } from '@expo-google-fonts/oleo-script';
+
+import { Home } from './src/screens/Home';
+import { Splash } from './src/screens/Splash';
+import theme from './src/global/styles/theme';
 
 export default function App() {
+  const [fontsLoaded] = useFonts({
+    Aleo_400Regular,
+    Aleo_300Light_Italic,
+    Aleo_700Bold,
+    Aleo_300Light,
+    OleoScript_400Regular
+  });
+
+  const [isSplashVisible, setSplashVisible] = useState(true);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setSplashVisible(false);
+    }, 4000);
+
+    return () => clearTimeout(timer);
+  }, []);
+
   return (
-    <View style={styles.container}>
-      <Text>Open up App.tsx to start working on your app!</Text>
+    <ThemeProvider theme={theme}>
       <StatusBar style="auto" />
-    </View>
+      {isSplashVisible ? <Splash /> : <Home />}
+    </ThemeProvider>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
