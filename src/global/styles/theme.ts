@@ -10,8 +10,9 @@ export default {
       card_background: '#023047',
       title_light: '#229DBD', 
       menu_background: '#000000', 
-      menu_button_dark_blue: '#1A2B4C', 
-      menu_button_light_blue: '#3C6E91', 
+      menu_button_dark_blue: '#043445', 
+      menu_button_light_blue: '#186A86', 
+      menu_button_light: '#4FB3CC',
       splash_background: '#C9E2E9', 
       splash_icon: '#023047' 
     },
