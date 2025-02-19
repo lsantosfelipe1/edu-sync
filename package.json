@@ -21,6 +21,7 @@
     "react-native": "0.76.7",
     "react-native-calendars": "^1.1309.1",
     "react-native-responsive-fontsize": "^0.5.1",
+    "recyclerlistview": "^4.2.1",
     "styled-components": "^6.1.15"
   },
   "devDependencies": {

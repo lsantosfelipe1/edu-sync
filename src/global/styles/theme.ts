@@ -14,7 +14,9 @@ export default {
       menu_button_light_blue: '#186A86', 
       menu_button_light: '#4FB3CC',
       splash_background: '#C9E2E9', 
-      splash_icon: '#023047' 
+      splash_icon: '#023047', 
+      calendar_background: 'rgba(145, 179, 250, 0.18)',
+      calendar_secondary: 'rgba(255, 255, 255, 0)',
     },
     fonts: {
       cursive: 'OleoScript_400Regular',

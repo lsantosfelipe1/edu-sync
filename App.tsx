@@ -11,6 +11,7 @@ import {
 import { OleoScript_400Regular } from '@expo-google-fonts/oleo-script';
 
 import { Home } from './src/screens/Home';
+import { Schedule } from './src/screens/Schedule';
 import { Splash } from './src/screens/Splash';
 import { Menu } from './src/screens/Menu';
 import theme from './src/global/styles/theme';
@@ -37,7 +38,7 @@ export default function App() {
   return (
     <ThemeProvider theme={theme}>
       <StatusBar style="auto" />
-      {isSplashVisible ? <Splash /> : <Menu />}
+      {isSplashVisible ? <Splash /> : <Schedule />}
     </ThemeProvider>
   );
 }
