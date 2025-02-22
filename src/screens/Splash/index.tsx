@@ -12,7 +12,7 @@ export function Splash() {
   return (
     <Container>
       <IconWrapper>
-        <Icon name="school" />
+        <Icon source={require('../../assets/logo_app.png')} />
       </IconWrapper>
       <TitleWrapper>
         <TitleEdu>Edu</TitleEdu>

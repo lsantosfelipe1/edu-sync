@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { ScrollView } from 'react-native';
 import { useTheme } from 'styled-components';
 import { Calendar, LocaleConfig } from 'react-native-calendars';
-import { ptBR } from '../../utils/localecalendarconfig';
+import { ptBR } from '../../utils/localeCalendarConfig';
 import { 
   Container,
   Header,

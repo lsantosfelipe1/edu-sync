@@ -1,4 +1,5 @@
 import React from 'react';
+import { useNavigation } from '@react-navigation/native';
 import { FlatList } from 'react-native';
 import { 
   Container,
@@ -25,11 +26,13 @@ const appointments = [
 ];
 
 export function Agendamentos() {
+  const navigation = useNavigation();
+  
   return (
     <Container>
       <Header>
         <UserWrapper>
-          <MenuButton>
+          <MenuButton onPress={() => navigation.navigate('Menu')}>
             <MenuIcon name="menu" />
           </MenuButton>
           <AppName>

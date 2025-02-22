@@ -1,4 +1,5 @@
 import React from 'react';
+import { useNavigation } from '@react-navigation/native';
 import { 
     Container,
     Header,
@@ -18,11 +19,13 @@ import {
 } from './style';
 
 export function Menu() {
+  const navigation = useNavigation();
+
   return (
     <Container>
         <Header>
             <UserWrapper>
-                <MenuButton>
+                <MenuButton onPress={() => navigation.goBack()}>
                     <MenuIcon name="menu" />
                 </MenuButton>
                 <AppName>
@@ -32,19 +35,19 @@ export function Menu() {
             </UserWrapper>
         </Header>
         <MenuWrapper>
-            <HomeButton>
+            <HomeButton onPress={() => navigation.navigate('Home')}>
                 <ButtonIcon name="home" />
                 <MenuButtonText>Início</MenuButtonText>
             </HomeButton>
-            <CalendarButton>
+            <CalendarButton onPress={() => navigation.navigate('Agendamentos')}>
                 <ButtonIcon name="calendar-today" />
                 <MenuButtonText>Agendamentos</MenuButtonText>
             </CalendarButton>
-            <ScheduleButton>
+            <ScheduleButton onPress={() => navigation.navigate('Schedule')}>
                 <ButtonIcon name="schedule" />
                 <MenuButtonText>Horários</MenuButtonText>
             </ScheduleButton>
-            <LogoutButton>
+            <LogoutButton onPress={() => navigation.navigate('Login')}>
                 <ButtonIcon name="logout" />
                 <MenuButtonText>Sair</MenuButtonText>
             </LogoutButton>
