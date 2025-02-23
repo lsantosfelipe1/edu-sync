@@ -13,7 +13,7 @@ import {
   ButtonWrapper, 
   LoginButton, 
   ButtonIcon, 
-  ButtonText 
+  ButtonText,
 } from './style';
 import theme from '../../global/styles/theme';
 

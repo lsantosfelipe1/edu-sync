@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { 
   Container, 
@@ -16,11 +16,31 @@ import {
   TextArea, 
   SaveButton, 
   SaveButtonText,
-  Divider
+  Divider,
 } from './style';
+import { SuccessOverlay } from '../../Components/Sucesso';
+import { ErrorOverlay } from '../../Components/Erro';
 
 export function ConfirmaAgenda() {
   const navigation = useNavigation();
+  const [successVisible, setSuccessVisible] = useState(false);
+  const [errorVisible, setErrorVisible] = useState(false);
+
+  const handleSave = () => {
+    const isSuccess = Math.random() > 0.5;
+    if (isSuccess) {
+      setSuccessVisible(true);
+      setTimeout(() => {
+        setSuccessVisible(false);
+        navigation.goBack();
+      }, 3000);
+    } else {
+      setErrorVisible(true);
+      setTimeout(() => {
+        setErrorVisible(false);
+      }, 3000);
+    }
+  };
 
   return (
     <Container>
@@ -50,10 +70,18 @@ export function ConfirmaAgenda() {
         
         <TextArea placeholder="Observações: " multiline />
         
-        <SaveButton>
+        <SaveButton onPress={handleSave}>
           <SaveButtonText>Salvar Agendamento</SaveButtonText>
         </SaveButton>
       </FormContainer>
+
+      <SuccessOverlay 
+        visible={successVisible} 
+      />
+
+      <ErrorOverlay 
+        visible={errorVisible} 
+      />
     </Container>
   );
 }

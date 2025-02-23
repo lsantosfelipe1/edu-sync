@@ -29,8 +29,8 @@ import {
   CancelText,
   ConfirmText
 } from './style';
-import { ErrorOverlay } from '../Erro';
-import { SuccessOverlay } from '../Sucesso';
+import { ErrorOverlay } from '../../Components/Erro';
+import { SuccessOverlay } from '../../Components/Sucesso';
 
 export function CancelaAgenda() {
   const navigation = useNavigation();

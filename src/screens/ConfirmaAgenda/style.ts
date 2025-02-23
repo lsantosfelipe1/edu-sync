@@ -117,7 +117,7 @@ export const TextArea = styled.TextInput.attrs(({ theme }) => ({
 `;
 
 export const SaveButton = styled.TouchableOpacity`
-  background-color: ${({ theme }) => theme.colors.warning};
+  background-color: ${({ theme }) => theme.colors.menu_button_light_blue};
   width: 90%;
   height: ${RFPercentage(6)}px;
   padding: ${RFPercentage(2)}px;

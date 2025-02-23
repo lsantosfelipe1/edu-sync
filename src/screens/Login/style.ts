@@ -17,8 +17,8 @@ export const LogoWrapper = styled.View`
 `;
 
 export const Logo = styled.Image`
-  width: ${RFPercentage(10)}px;
-  height: ${RFPercentage(10)}px;
+  width: ${RFPercentage(8)}px;
+  height: ${RFPercentage(8)}px;
   margin-bottom: 10px;
 `;
 
