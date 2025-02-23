@@ -53,33 +53,10 @@ export function Schedule() {
 
       <ScrollView showsVerticalScrollIndicator={false}>
         <CalendarContainer>
-          <Calendar
-            onDayPress={(day) => setSelectedDate(day.dateString)}
-            markedDates={{
-              [selectedDate]: {
-                selected: true,
-                marked: true,
-                selectedColor: theme.colors.menu_button_dark_blue
-              }
-            }}
-            theme={calendarTheme(theme)}
-          />
+        
         </CalendarContainer>
 
         <ScheduleContainer>
-          <ScheduleTitle>
-            {selectedDate ? 
-              `Horários de ${new Date(selectedDate).toLocaleDateString('pt-BR')}` 
-              : 'Selecione uma data'}
-          </ScheduleTitle>
-
-          <ScheduleGrid>
-            {horarios.map((hora, index) => (
-              <ScheduleButton key={index}>
-                <ScheduleButtonText>{hora}</ScheduleButtonText>
-              </ScheduleButton>
-            ))}
-          </ScheduleGrid>
         </ScheduleContainer>
       </ScrollView>
     </Container>

@@ -25,9 +25,6 @@ export function Menu() {
     <Container>
         <Header>
             <UserWrapper>
-                <MenuButton onPress={() => navigation.goBack()}>
-                    <MenuIcon name="menu" />
-                </MenuButton>
                 <AppName>
                     <Title>Edu</Title>
                     <TitleC>Sync</TitleC>

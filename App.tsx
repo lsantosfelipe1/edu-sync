@@ -18,6 +18,9 @@ import { Menu } from './src/screens/Menu';
 import { Schedule } from './src/screens/Schedule';
 import { Agendamentos } from './src/screens/Agendamentos';
 import { Login } from './src/screens/Login';
+import { ConfirmaAgenda } from './src/screens/ConfirmaAgenda';
+import { CancelaAgenda } from './src/screens/CancelaAgenda';
+import { ExcluiAgenda } from './src/screens/ExcluiAgenda';
 import theme from './src/global/styles/theme';
 
 const Stack = createStackNavigator();
@@ -59,6 +62,9 @@ export default function App() {
               <Stack.Screen name="Menu" component={Menu} />
               <Stack.Screen name="Schedule" component={Schedule} />
               <Stack.Screen name="Agendamentos" component={Agendamentos} />
+              <Stack.Screen name="CancelaAgenda" component={CancelaAgenda} />
+              <Stack.Screen name="ExcluiAgenda" component={ExcluiAgenda} />
+              <Stack.Screen name="ConfirmaAgenda" component={ConfirmaAgenda} />
             </>
           )}
         </Stack.Navigator>

@@ -30,6 +30,7 @@ export const AppName = styled.View`
   flex: 1;
   flex-direction: row;
   justify-content: center;
+  margin-left: ${RFPercentage(-4)}px;
 `;
 
 export const Title = styled.Text`
