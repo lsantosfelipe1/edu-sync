@@ -1,6 +1,7 @@
 import { useNavigation } from '@react-navigation/native';
 import React, { useState } from 'react';
 import { Modal } from 'react-native';
+import LottieView from 'lottie-react-native'; 
 import { 
   Overlay, 
   ModalContainer, 
@@ -27,7 +28,15 @@ export const SuccessOverlay = ({ visible }) => {
     <Modal transparent visible={visible} animationType="fade">
       <Overlay>
         <ModalContainer>
-          <Warning>✔</Warning>
+          <Warning>
+            {}
+            <LottieView
+              source={{ uri: 'https://lottie.host/b3c801b1-eb9f-4f11-83bf-72fcd8db42cb/ZH8uAU00pt.json' }}
+              autoPlay
+              loop
+              style={{ width: 100, height: 100 }}
+            />
+          </Warning>
           <Message> Sucesso! </Message>
         </ModalContainer>
       </Overlay>
