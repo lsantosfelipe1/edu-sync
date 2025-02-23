@@ -66,6 +66,7 @@ export const ScheduleContainer = styled.View`
   padding: ${RFPercentage(2)}px;
   background-color: ${({ theme }) => theme.colors.calendar_background};
   border-radius: ${RFPercentage(2)}px;
+  flex: 1;
 `;
 
 export const ScheduleTitle = styled.Text`
@@ -79,10 +80,11 @@ export const ScheduleTitle = styled.Text`
 export const ScheduleGrid = styled.View`
   flex-direction: row;
   flex-wrap: wrap;
-  justify-content: center;
+  justify-content: space-evenly;
 `;
 
 export const ScheduleButton = styled.TouchableOpacity`
+  width: ${RFPercentage(11)}px;
   background-color: ${({ theme }) => theme.colors.menu_button_dark_blue};
   padding: ${RFPercentage(2)}px ${RFPercentage(3)}px;
   margin: ${RFPercentage(1)}px;
@@ -91,8 +93,8 @@ export const ScheduleButton = styled.TouchableOpacity`
 
 export const ScheduleButtonText = styled.Text`
   color: ${({ theme }) => theme.colors.primary};
-  font-size: ${RFPercentage(2.5)}px;
-  font-family: ${({ theme }) => theme.fonts.bold};
+  font-size: ${RFPercentage(2)}px;
+  font-family: ${({ theme }) => theme.fonts.regular};
 `;
 
 export const TitleScreen = styled.Text`
@@ -127,7 +129,7 @@ export const calendarTheme = (theme) => ({
       marginTop: 5,
       flexDirection: 'row',
       justifyContent: 'space-between',
-      backgroundColor: theme.colors.calendar_secondary,
+      backgroundColor: theme.colors.primary,
     },
   },
 });

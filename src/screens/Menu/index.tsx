@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { 
     Container,
@@ -16,10 +16,34 @@ import {
     CalendarButton,
     ScheduleButton,
     LogoutButton,
+    Overlay, 
+    ModalContainer,
+    Warning,  
+    Message,
+    ButtonContainer,
+    CancelButton,
+    CancelText,
+    ConfirmButton,
+    ConfirmText,
 } from './style';
+import { Modal } from 'react-native';
 
 export function Menu() {
   const navigation = useNavigation();
+  const [modalVisible, setModalVisible] = useState(false);
+
+  const handleLogout = () => {
+    setModalVisible(true);
+  };
+
+  const handleCancel = () => {
+    setModalVisible(false);
+  };
+
+  const handleConfirm = () => {
+    setModalVisible(false);
+    navigation.navigate('Login');
+  };
 
   return (
     <Container>
@@ -44,11 +68,38 @@ export function Menu() {
                 <ButtonIcon name="schedule" />
                 <MenuButtonText>Horários</MenuButtonText>
             </ScheduleButton>
-            <LogoutButton onPress={() => navigation.navigate('Login')}>
+            <LogoutButton onPress={handleLogout}>
                 <ButtonIcon name="logout" />
                 <MenuButtonText>Sair</MenuButtonText>
             </LogoutButton>
         </MenuWrapper>
+
+        <CancelConfirmation 
+            visible={modalVisible} 
+            onCancel={handleCancel} 
+            onConfirm={handleConfirm} 
+        />
     </Container>
   );
 }
+
+const CancelConfirmation = ({ visible, onCancel, onConfirm }) => {
+  return (
+    <Modal transparent visible={visible} animationType="fade">
+      <Overlay>
+        <ModalContainer>
+          <Warning>⚠</Warning>
+          <Message>Realmente deseja Sair?</Message>
+          <ButtonContainer>
+            <CancelButton onPress={onCancel}>
+              <CancelText>Cancelar</CancelText>
+            </CancelButton>
+            <ConfirmButton onPress={onConfirm}>
+              <ConfirmText>Sim</ConfirmText>
+            </ConfirmButton>
+          </ButtonContainer>
+        </ModalContainer>
+      </Overlay>
+    </Modal>
+  );
+};

@@ -19,8 +19,8 @@ export const IconWrapper = styled.View`
 `;
 
 export const Icon = styled.Image`
-width: ${RFPercentage(20)}px;
-height: ${RFPercentage(20)}px;
+width: ${RFPercentage(15)}px;
+height: ${RFPercentage(15)}px;
 `;
 
 export const TitleWrapper = styled.View`

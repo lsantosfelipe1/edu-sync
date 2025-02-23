@@ -106,3 +106,60 @@ padding-bottom: ${RFPercentage(1)}px;
   color: ${({ theme }) => theme.colors.primary};
   font-size: ${RFPercentage(5)}px;
 `;
+
+export const Overlay = styled.View`
+  flex: 1;
+  justify-content: center;
+  align-items: center;
+  background-color: ${({ theme }) => theme.colors.overlay};
+`;
+
+export const ModalContainer = styled.View`
+  background-color: ${({ theme }) => theme.colors.modal_container};
+  padding: ${RFPercentage(2)}px;
+  border-radius: ${RFPercentage(2)}px;
+  align-items: center;
+  width: ${RFPercentage(40)}px;
+`;
+
+export const Warning = styled.Text`
+  font-size: ${RFPercentage(8)}px;
+  color: ${({ theme }) => theme.colors.text};
+`;
+
+export const Message = styled.Text`
+  font-family: ${({ theme }) => theme.fonts.regular};
+  color: ${({ theme }) => theme.colors.text};
+  font-size: ${RFPercentage(2)}px;
+  margin-vertical: ${RFPercentage(1)}px;
+`;
+
+export const ButtonContainer = styled.View`
+  flex-direction: row;
+  margin-top: ${RFPercentage(2)}px;
+`;
+
+export const CancelButton = styled.TouchableOpacity`
+  background-color: ${({ theme }) => theme.colors.cancel_button};
+  padding: ${RFPercentage(2)}px;
+  border-radius: ${RFPercentage(1)}px;
+  margin-right: ${RFPercentage(1)}px;
+`;
+
+export const ConfirmButton = styled.TouchableOpacity`
+  background-color: ${({ theme }) => theme.colors.warning};
+  padding: ${RFPercentage(2)}px;
+  border-radius: ${RFPercentage(1)}px;
+`;
+
+export const CancelText = styled.Text`
+  font-family: ${({ theme }) => theme.fonts.bold};
+  color: white;
+  font-size: ${RFPercentage(2)}px;
+`;
+
+export const ConfirmText = styled.Text`
+  font-family: ${({ theme }) => theme.fonts.bold};
+  color: white;
+  font-size: ${RFPercentage(2)}px;
+`;
