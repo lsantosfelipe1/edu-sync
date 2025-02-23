@@ -14,6 +14,7 @@ import {
   Section,
   SectionTitle,
   AppointmentCard,
+  ArrowIcon,
   AppointmentText,
   StatusIcon
 } from './style';
@@ -22,7 +23,8 @@ const appointments = [
   { id: '1', name: 'Nome do compromisso, 14/07, 15:00h', status: 'completed' },
   { id: '2', name: 'Nome do compromisso, 14/07, 15:00h', status: 'completed' },
   { id: '3', name: 'Nome do compromisso, 14/07, 15:00h', status: 'completed' },
-  { id: '4', name: 'Nome do compromisso, 14/07, 15:00h', status: 'scheduled' }
+  { id: '4', name: 'Nome do compromisso, 14/07, 15:00h', status: 'completed' },
+  { id: '5', name: 'Nome do compromisso, 14/07, 15:00h', status: 'scheduled' }
 ];
 
 export function Agendamentos() {
@@ -42,7 +44,7 @@ export function Agendamentos() {
         </UserWrapper>
       </Header>
 
-      <TitleScreen>Horários</TitleScreen>
+      <TitleScreen>Agendamentos</TitleScreen>
 
       <Section>
         <SectionTitle>Concluídos</SectionTitle>
@@ -53,6 +55,7 @@ export function Agendamentos() {
             <AppointmentCard>
               <StatusIcon name="check-circle" />
               <AppointmentText>{item.name}</AppointmentText>
+              <ArrowIcon name="chevron-right" onPress={() => navigation.navigate('ExcluiAgenda')} />
             </AppointmentCard>
           )}
         />
@@ -65,8 +68,9 @@ export function Agendamentos() {
           keyExtractor={item => item.id}
           renderItem={({ item }) => (
             <AppointmentCard>
-              <StatusIcon name="schedule" />
+              <StatusIcon name="calendar-today" />
               <AppointmentText>{item.name}</AppointmentText>
+              <ArrowIcon name="chevron-right" onPress={() => navigation.navigate('CancelaAgenda')} />
             </AppointmentCard>
           )}
         />

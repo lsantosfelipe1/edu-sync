@@ -30,6 +30,7 @@ export const AppName = styled.View`
   flex: 1;
   flex-direction: row;
   justify-content: center;
+  margin-left: ${RFPercentage(-4)}px;
 `;
 
 export const Title = styled.Text`
@@ -60,32 +61,44 @@ export const TitleScreen = styled.Text`
 `;
 
 export const Section = styled.View`
-  margin-top: 20px;
+  margin-top: ${RFPercentage(2)}px;
+  align-items: center;
+  color: ${({ theme }) => theme.colors.calendar_background};
 `;
 
 export const SectionTitle = styled.Text`
-  font-size: 18px;
-  font-weight: bold;
+  font-size: ${RFPercentage(2)}px;
+  font-family: ${({ theme }) => theme.fonts.light_italic};
   margin-bottom: 10px;
-  color: #555;
+  color: ${({ theme }) => theme.colors.secondary_light};
 `;
 
 export const AppointmentCard = styled.View`
   flex-direction: row;
   align-items: center;
-  background-color: #dde7fa;
-  padding: 15px;
-  border-radius: 10px;
-  margin-bottom: 10px;
+  width: 95%;
+  height: ${RFPercentage(10)}px;
+  background-color: ${({ theme }) => theme.colors.calendar_background};
+  padding: ${RFPercentage(2)}px;
+  border-radius: ${RFPercentage(2)}px;
+  margin-bottom: ${RFPercentage(2)}px;
+  align-self: center;
+`;
+
+export const ArrowIcon = styled(MaterialIcons)`
+  font-size: ${RFPercentage(3)}px;
+  color: ${({ theme }) => theme.colors.secondary_light};
+  margin-left: auto;
 `;
 
 export const StatusIcon = styled(MaterialIcons)`
-  font-size: 24px;
-  color: #4caf50;
+  font-size: ${RFPercentage(2.5)}px;
+  color: ${({ theme }) => theme.colors.secondary_light};
   margin-right: 10px;
 `;
 
 export const AppointmentText = styled.Text`
-  font-size: 16px;
-  color: #333;
+  font-size: ${RFPercentage(2)}px;
+  color: ${({ theme }) => theme.colors.secondary_light};
+  font-family: ${({ theme }) => theme.fonts.regular};
 `;
