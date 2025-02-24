@@ -7,12 +7,12 @@ const statusBarHeight = Platform.OS === 'android' ? StatusBar.currentHeight : 0;
 
 export const Container = styled.View`
   flex: 1;
-  background-color: ${({ theme }) => theme.colors.background};
+  background-color: ${({ theme }) => theme.colors.menu_background};
 `;
 
 export const Header = styled.View`
   width: 100%;
-  height: ${RFPercentage(9)}px;
+  height: ${RFPercentage(10)}px;
   background-color: ${({ theme }) => theme.colors.primary};
   align-items: center;
   justify-content: center;
@@ -30,7 +30,6 @@ export const AppName = styled.View`
   flex: 1;
   flex-direction: row;
   justify-content: center;
-  margin-left: ${RFPercentage(-4)}px;
 `;
 
 export const Title = styled.Text`
@@ -45,76 +44,67 @@ export const TitleC = styled.Text`
   color: ${({ theme }) => theme.colors.title_light};
 `;
 
+export const MenuWrapper = styled.View`
+  flex: 1;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+`;
+
 export const MenuButton = styled.TouchableOpacity``;
 
 export const MenuIcon = styled(MaterialIcons)`
-  color: ${({ theme }) => theme.colors.secondary_light};
+  color: ${({ theme }) => theme.colors.secondary};
   font-size: ${RFPercentage(5)}px;
 `;
 
-export const AvatarWrapper = styled.View`
-  margin-top: ${RFPercentage(8)}px; 
-  height: ${RFPercentage(37)}px;
+export const HomeButton = styled.TouchableOpacity`
+  flex-direction: column;
   align-items: center;
   justify-content: center;
+  width: 100%;
+  height: ${RFPercentage(24.5)}px;
+  background-color: ${({ theme }) => theme.colors.highlight};
 `;
 
-export const AvatarBackground = styled.View`
-  width: ${RFPercentage(20)}px;
-  height: ${RFPercentage(20)}px;
-  border-radius: ${RFPercentage(10)}px;
-  background-color: ${({ theme }) => theme.colors.secondary_light};
+export const CalendarButton = styled.TouchableOpacity`
+  flex-direction: column;
   align-items: center;
   justify-content: center;
+  width: 100%;
+  height: ${RFPercentage(24.5)}px;
+  background-color: ${({ theme }) => theme.colors.menu_button_dark_blue};
 `;
 
-export const AvatarIcon = styled(MaterialIcons)`
-  color: ${({ theme }) => theme.colors.text};
-  font-size: ${RFPercentage(15)}px;
-`;
-
-export const Avatar = styled.Image`
-  width: ${RFPercentage(20)}px;
-  height: ${RFPercentage(20)}px;
-  border-radius: ${RFPercentage(7.5)}px;
-  position: absolute;
-`;
-
-export const WelcomeText = styled.Text`
-  margin-top: ${RFPercentage(4)}px;
-  font-family: ${({ theme }) => theme.fonts.bold};
-  font-size: ${RFPercentage(3.5)}px;
-  color: ${({ theme }) => theme.colors.text_dark};
-`;
-
-export const MenuGrid = styled.View`
-  flex: 1;
-  flex-direction: row;
-  flex-wrap: wrap;
-  justify-content: center;
-  margin-top: ${RFPercentage(2)}px;
-`;
-
-export const MenuButtonGrid = styled.TouchableOpacity`
-  width: ${RFPercentage(23)}px;
-  height: ${RFPercentage(23)}px;
-  background-color: ${({ theme }) => theme.colors.card_background};
+export const ScheduleButton = styled.TouchableOpacity`
+  flex-direction: column;
   align-items: center;
   justify-content: center;
-  margin: ${RFPercentage(0.2)}px;
-  border-radius: ${RFPercentage(1)}px;
+  width: 100%;
+  height: ${RFPercentage(24.5)}px;
+  background-color: ${({ theme }) => theme.colors.menu_button_light_blue};
 `;
 
-export const MenuIconGrid = styled(MaterialIcons)`
-  color: ${({ theme }) => theme.colors.text};
-  font-size: ${RFPercentage(6)}px;
+export const LogoutButton = styled.TouchableOpacity`
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: ${RFPercentage(24.5)}px;
+  background-color: ${({ theme }) => theme.colors.menu_button_light};
 `;
 
-export const MenuText = styled.Text`
-  margin-top: ${RFPercentage(1)}px;
+export const MenuButtonText = styled.Text`
   font-family: ${({ theme }) => theme.fonts.regular};
-  font-size: ${RFPercentage(2)}px;
-  color: ${({ theme }) => theme.colors.text};
+  font-size: ${RFPercentage(3)}px;
+  color: ${({ theme }) => theme.colors.primary};
+`;
+
+export const ButtonIcon = styled(MaterialIcons)`
+padding-bottom: ${RFPercentage(1)}px;
+  color: ${({ theme }) => theme.colors.primary};
+  font-size: ${RFPercentage(5)}px;
 `;
 
 export const Overlay = styled.View`

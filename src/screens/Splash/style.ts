@@ -1,6 +1,5 @@
 import { RFPercentage } from 'react-native-responsive-fontsize';
 import styled from 'styled-components/native';
-import { MaterialIcons } from '@expo/vector-icons';
 
 export const Container = styled.View`
   flex: 1;
@@ -19,9 +18,9 @@ export const IconWrapper = styled.View`
   margin-bottom: ${RFPercentage(5)}px;
 `;
 
-export const Icon = styled(MaterialIcons)`
-  color: ${({ theme }) => theme.colors.primary};
-  font-size: ${RFPercentage(10)}px;
+export const Icon = styled.Image`
+width: ${RFPercentage(15)}px;
+height: ${RFPercentage(15)}px;
 `;
 
 export const TitleWrapper = styled.View`
