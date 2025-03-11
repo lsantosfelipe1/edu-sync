@@ -1,6 +1,8 @@
-import React from 'react';
-import { useNavigation } from '@react-navigation/native';
+import React, { useEffect, useState } from 'react';
+import { useNavigation, NavigationProp } from '@react-navigation/native';
 import { LinearGradient } from 'expo-linear-gradient';
+import { makeRedirectUri, useAuthRequest, exchangeCodeAsync } from 'expo-auth-session';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { 
   Container, 
   LogoWrapper, 
@@ -17,8 +19,57 @@ import {
 } from './style';
 import theme from '../../global/styles/theme';
 
+type RootStackParamList = {
+  Home: undefined;
+};
+
+const CALENDLY_CLIENT_ID = process.env.EXPO_CALENDLY_CLIENT_ID;
+const AUTHORIZATION_ENDPOINT = 'https://auth.calendly.com/oauth/authorize';
+const TOKEN_ENDPOINT = 'https://auth.calendly.com/oauth/token';
+
 export function Login() {
-  const navigation = useNavigation();
+  const navigation = useNavigation<NavigationProp<RootStackParamList>>();
+
+  // Obtemos o redirectUri automaticamente
+  const redirectUri = makeRedirectUri({
+    useProxy: true, // Use este parâmetro se estiver testando no Expo Go
+  });
+
+  // Configuração da requisição de autenticação OAuth
+  const [request, response, promptAsync] = useAuthRequest(
+    {
+      clientId: CALENDLY_CLIENT_ID!,
+      scopes: ['default'],
+      redirectUri,
+      responseType: 'code',
+    },
+    { authorizationEndpoint: AUTHORIZATION_ENDPOINT }
+  );
+
+  useEffect(() => {
+    const handleAuthResponse = async () => {
+      if (response?.type === 'success' && response.params.code) {
+        try {
+          const tokenResponse = await exchangeCodeAsync(
+            {
+              code: response.params.code,
+              clientId: CALENDLY_CLIENT_ID!,
+              redirectUri,
+              extraParams: { grant_type: 'authorization_code' },
+            },
+            { tokenEndpoint: TOKEN_ENDPOINT }
+          );
+
+          await AsyncStorage.setItem('accessToken', tokenResponse.accessToken);
+          navigation.navigate('Home');
+        } catch (error) {
+          console.error('Erro ao obter token:', error);
+        }
+      }
+    };
+
+    handleAuthResponse();
+  }, [response]);
 
   return (
     <LinearGradient
@@ -38,14 +89,9 @@ export function Login() {
         <Subtitle>Faça login para continuar</Subtitle>
         
         <ButtonWrapper>
-          <LoginButton onPress={() => navigation.navigate('Home')}>
+          <LoginButton onPress={() => promptAsync()}>
             <ButtonIcon source={require('../../assets/google.png')} />
-            <ButtonText>Continue com Google</ButtonText>
-          </LoginButton>
-          
-          <LoginButton onPress={() => navigation.navigate('Home')}>
-            <ButtonIcon source={require('../../assets/apple.png')} />
-            <ButtonText>Continue com Apple ID</ButtonText>
+            <ButtonText>Continue com Calendly</ButtonText>
           </LoginButton>
         </ButtonWrapper>
       </Container>
