@@ -23,6 +23,7 @@ type RootStackParamList = {
   Home: undefined;
 };
 
+const CALENDLY_CLIENT_SECRET = process.env.EXPO_CALENDLY_CLIENT_SECRET;
 const CALENDLY_CLIENT_ID = process.env.EXPO_CALENDLY_CLIENT_ID;
 const AUTHORIZATION_ENDPOINT = 'https://auth.calendly.com/oauth/authorize';
 const TOKEN_ENDPOINT = 'https://auth.calendly.com/oauth/token';
@@ -30,18 +31,20 @@ const TOKEN_ENDPOINT = 'https://auth.calendly.com/oauth/token';
 export function Login() {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
 
-  // Obtemos o redirectUri automaticamente
   const redirectUri = makeRedirectUri({
-    useProxy: true, // Use este parâmetro se estiver testando no Expo Go
+    scheme: 'edusync',
   });
 
-  // Configuração da requisição de autenticação OAuth
+  console.log('CALENDLY_CLIENT_ID:', CALENDLY_CLIENT_ID);
+  console.log('REDIRECT_URI:', redirectUri);
+
   const [request, response, promptAsync] = useAuthRequest(
     {
       clientId: CALENDLY_CLIENT_ID!,
       scopes: ['default'],
       redirectUri,
       responseType: 'code',
+      usePKCE: true,
     },
     { authorizationEndpoint: AUTHORIZATION_ENDPOINT }
   );
@@ -54,12 +57,16 @@ export function Login() {
             {
               code: response.params.code,
               clientId: CALENDLY_CLIENT_ID!,
+              clientSecret: CALENDLY_CLIENT_SECRET,
               redirectUri,
-              extraParams: { grant_type: 'authorization_code' },
+              extraParams: {
+                grant_type: 'authorization_code',
+                code_verifier: request?.codeVerifier,
+              },
             },
             { tokenEndpoint: TOKEN_ENDPOINT }
           );
-
+  
           await AsyncStorage.setItem('accessToken', tokenResponse.accessToken);
           navigation.navigate('Home');
         } catch (error) {
@@ -67,7 +74,6 @@ export function Login() {
         }
       }
     };
-
     handleAuthResponse();
   }, [response]);
 
@@ -91,7 +97,7 @@ export function Login() {
         <ButtonWrapper>
           <LoginButton onPress={() => promptAsync()}>
             <ButtonIcon source={require('../../assets/google.png')} />
-            <ButtonText>Continue com Calendly</ButtonText>
+            <ButtonText>Continue com Google</ButtonText>
           </LoginButton>
         </ButtonWrapper>
       </Container>

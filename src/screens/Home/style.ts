@@ -83,7 +83,8 @@ export const Avatar = styled.Image`
 export const WelcomeText = styled.Text`
   margin-top: ${RFPercentage(4)}px;
   font-family: ${({ theme }) => theme.fonts.bold};
-  font-size: ${RFPercentage(3.5)}px;
+  font-size: ${RFPercentage(2.5)}px;
+  justify-content: center;
   color: ${({ theme }) => theme.colors.text_dark};
 `;
 

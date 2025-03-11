@@ -44,6 +44,7 @@ export function Home() {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
   const [modalVisible, setModalVisible] = useState(false);
   const [userName, setUserName] = useState('');
+  const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchUserName = async () => {
@@ -51,7 +52,8 @@ export function Home() {
         const accessToken = await AsyncStorage.getItem('accessToken');
         if (accessToken) {
           const userData = await getUserData(accessToken);
-          setUserName(userData.name);
+          setUserName(userData.resource.name); 
+          setAvatarUrl(userData.resource.avatar_url); 
         } else {
           navigation.navigate('Login');
         }
@@ -60,7 +62,7 @@ export function Home() {
         navigation.navigate('Login');
       }
     };
-
+  
     fetchUserName();
   }, [navigation]);
 
@@ -94,8 +96,11 @@ export function Home() {
 
       <AvatarWrapper>
         <AvatarBackground>
-          <AvatarIcon name="person" />
-          <Avatar/>
+          {avatarUrl ? (
+            <Avatar source={{ uri: avatarUrl }} />
+          ) : (
+            <AvatarIcon name="person" />
+          )}
         </AvatarBackground>
         <WelcomeText>Bem-vindo, {userName}!</WelcomeText>
       </AvatarWrapper>

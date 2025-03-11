@@ -9,18 +9,25 @@ const api = axios.create({
 });
 
 export const getUserData = async (accessToken) => {
-  try {
-    const response = await api.get('/users/me', {
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-      },
-    });
-    return response.data;
-  } catch (error) {
-    console.error('Error fetching user data:', error);
-    throw error;
-  }
-};
+    try {
+      const response = await fetch('https://api.calendly.com/users/me', {
+        method: 'GET',
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      });
+  
+      if (!response.ok) {
+        throw new Error('Erro ao buscar dados do usuário');
+      }
+  
+      const data = await response.json();
+      return data;
+    } catch (error) {
+      console.error('Erro na requisição:', error);
+      throw error;
+    }
+  };
 
 export const getAccessToken = async (code) => {
   try {
