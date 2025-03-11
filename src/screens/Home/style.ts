@@ -96,8 +96,8 @@ export const MenuGrid = styled.View`
 `;
 
 export const MenuButtonGrid = styled.TouchableOpacity`
-  width: ${RFPercentage(23)}px;
-  height: ${RFPercentage(23)}px;
+  width: ${RFPercentage(20)}px;
+  height: ${RFPercentage(20)}px;
   background-color: ${({ theme }) => theme.colors.card_background};
   align-items: center;
   justify-content: center;

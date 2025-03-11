@@ -1,5 +1,6 @@
 {
   "expo": {
+    "scheme": "edusync",
     "name": "edusync",
     "slug": "edusync",
     "version": "1.0.0",

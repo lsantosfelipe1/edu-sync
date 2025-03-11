@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { ScrollView } from 'react-native';
 import { useTheme } from 'styled-components';
 import { Calendar, LocaleConfig } from 'react-native-calendars';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, NavigationProp } from '@react-navigation/native';
 import { ptBR } from '../../utils/localeCalendarConfig';
 import { 
   Container,
@@ -23,14 +23,19 @@ import {
   calendarTheme
 } from './style';
 
+type RootStackParamList = {
+  ConfirmaAgenda: { date: string, time: string };
+  Menu: undefined;
+};
+
 LocaleConfig.locales['pt-br'] = ptBR;
 LocaleConfig.defaultLocale = 'pt-br';
 
 export function Schedule() {
   const theme = useTheme();
-  const navigation = useNavigation();
+  const navigation = useNavigation<NavigationProp<RootStackParamList>>();
   const [selectedDate, setSelectedDate] = useState('');
-  const capitalizeFirstLetter = (str) => {
+  const capitalizeFirstLetter = (str: string) => {
     return str.replace(/\b\w/g, (char) => char.toUpperCase());
   };
 
@@ -40,7 +45,7 @@ export function Schedule() {
     '17:00', '18:30', '20:00'
   ];
 
-  const handleSchedulePress = (hora) => {
+  const handleSchedulePress = (hora: string) => {
     navigation.navigate('ConfirmaAgenda', { date: selectedDate, time: hora });
   };
 
@@ -63,7 +68,7 @@ export function Schedule() {
       <ScrollView showsVerticalScrollIndicator={false}>
         <CalendarContainer>
           <Calendar
-            onDayPress={(day) => setSelectedDate(day.dateString)}
+            onDayPress={(day: { dateString: React.SetStateAction<string>; }) => setSelectedDate(day.dateString)}
             markedDates={{
               [selectedDate]: {
                 selected: true,

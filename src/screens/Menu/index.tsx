@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, NavigationProp } from '@react-navigation/native';
 import { 
     Container,
     Header,
@@ -28,8 +28,16 @@ import {
 } from './style';
 import { Modal } from 'react-native';
 
+type RootStackParamList = {
+  Home: undefined;
+  Menu: undefined;
+  Agendamentos: undefined;
+  Schedule: undefined;
+  Login: undefined;
+};
+
 export function Menu() {
-  const navigation = useNavigation();
+  const navigation = useNavigation<NavigationProp<RootStackParamList>>();
   const [modalVisible, setModalVisible] = useState(false);
 
   const handleLogout = () => {
@@ -83,7 +91,7 @@ export function Menu() {
   );
 }
 
-const CancelConfirmation = ({ visible, onCancel, onConfirm }) => {
+const CancelConfirmation = ({ visible, onCancel, onConfirm }: { visible: boolean, onCancel: () => void, onConfirm: () => void }) => {
   return (
     <Modal transparent visible={visible} animationType="fade">
       <Overlay>

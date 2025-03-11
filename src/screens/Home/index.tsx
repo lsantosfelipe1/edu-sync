@@ -1,6 +1,8 @@
-import React, { useState } from 'react';
-import { useNavigation } from '@react-navigation/native';
+import React, { useState, useEffect } from 'react';
+import { useNavigation, NavigationProp } from '@react-navigation/native';
 import { Modal } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { getUserData } from '../../services/api';
 import { 
   Container,
   Header,
@@ -30,11 +32,40 @@ import {
   ConfirmText,
 } from './style';
 
-export function Home() {
-  const navigation = useNavigation();
-  const [modalVisible, setModalVisible] = useState(false);
+type RootStackParamList = {
+  Home: undefined;
+  Menu: undefined;
+  Agendamentos: undefined;
+  Schedule: undefined;
+  Login: undefined;
+};
 
-  const handleLogout = () => {
+export function Home() {
+  const navigation = useNavigation<NavigationProp<RootStackParamList>>();
+  const [modalVisible, setModalVisible] = useState(false);
+  const [userName, setUserName] = useState('');
+
+  useEffect(() => {
+    const fetchUserName = async () => {
+      try {
+        const accessToken = await AsyncStorage.getItem('accessToken');
+        if (accessToken) {
+          const userData = await getUserData(accessToken);
+          setUserName(userData.name);
+        } else {
+          navigation.navigate('Login');
+        }
+      } catch (error) {
+        console.error('Error fetching user data:', error);
+        navigation.navigate('Login');
+      }
+    };
+
+    fetchUserName();
+  }, [navigation]);
+
+  const handleLogout = async () => {
+    await AsyncStorage.removeItem('accessToken');
     setModalVisible(true);
   };
 
@@ -66,7 +97,7 @@ export function Home() {
           <AvatarIcon name="person" />
           <Avatar/>
         </AvatarBackground>
-        <WelcomeText>Bem-vindo, ********!</WelcomeText>
+        <WelcomeText>Bem-vindo, {userName}!</WelcomeText>
       </AvatarWrapper>
 
       <MenuGrid>
@@ -100,7 +131,7 @@ export function Home() {
   );
 }
 
-const CancelConfirmation = ({ visible, onCancel, onConfirm }) => {
+const CancelConfirmation = ({ visible, onCancel, onConfirm }: { visible: boolean, onCancel: () => void, onConfirm: () => void }) => {
   return (
     <Modal transparent visible={visible} animationType="fade">
       <Overlay>

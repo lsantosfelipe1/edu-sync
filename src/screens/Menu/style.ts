@@ -16,7 +16,6 @@ export const Header = styled.View`
   background-color: ${({ theme }) => theme.colors.primary};
   align-items: center;
   justify-content: center;
-  padding-top: ${statusBarHeight}px;
 `;
 
 export const UserWrapper = styled.View`

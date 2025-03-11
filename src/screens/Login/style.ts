@@ -65,16 +65,15 @@ export const LoginButton = styled.TouchableOpacity`
   flex-direction: row;
   align-items: center;
   background-color: ${({ theme }) => theme.colors.primary};
-  padding: 12px;
+  padding: ${RFPercentage(2)}px;
   border-radius: ${RFPercentage(2)}px;
-  width: ${RFPercentage(30)}px;
+  width: ${RFPercentage(33)}px;
   margin-bottom: ${RFPercentage(2)}px;
 `;
 
 export const ButtonIcon = styled.Image`
   width: ${RFPercentage(3)}px;
   height: ${RFPercentage(3)}px;
-  margin-right: 10px;
 `;
 
 export const ButtonText = styled.Text`
