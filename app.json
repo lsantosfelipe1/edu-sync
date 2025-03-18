@@ -1,9 +1,10 @@
 {
   "expo": {
-    "scheme": "edusync",
     "name": "edusync",
+    "scheme": "edusync",
     "slug": "edusync",
     "version": "1.0.0",
+    
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",

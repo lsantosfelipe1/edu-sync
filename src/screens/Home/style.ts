@@ -76,7 +76,7 @@ export const AvatarIcon = styled(MaterialIcons)`
 export const Avatar = styled.Image`
   width: ${RFPercentage(20)}px;
   height: ${RFPercentage(20)}px;
-  border-radius: ${RFPercentage(7.5)}px;
+  border-radius: ${RFPercentage(10)}px;
   position: absolute;
 `;
 

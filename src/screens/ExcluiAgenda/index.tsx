@@ -1,6 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { Modal } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useRoute, RouteProp } from '@react-navigation/native';
+import { fetchAppointmentDetails } from '../../services/api';
+import { RootStackParamList } from '../../routes';
 import { 
   Container, 
   Header, 
@@ -29,14 +31,58 @@ import {
   CancelText,
   ConfirmText
 } from './style';
-import { SuccessOverlay } from '../../Components/Sucesso';
 import { ErrorOverlay } from '../../Components/Erro';
+import { SuccessOverlay } from '../../Components/Sucesso';
+
+type AppointmentDetails = {
+  name: string;
+  start_time: string;
+  meeting_notes_plain: string | null;
+  event_memberships: {
+    user_name: string;
+    user_email: string;
+  }[];
+};
 
 export function ExcluiAgenda() {
   const navigation = useNavigation();
+  const route = useRoute<RouteProp<RootStackParamList, 'CancelaAgenda'>>();
+  const { appointmentId } = route.params;
+
+  const [appointmentDetails, setAppointmentDetails] = useState<AppointmentDetails | null>(null);
   const [modalVisible, setModalVisible] = useState(false);
   const [successVisible, setSuccessVisible] = useState(false);
   const [errorVisible, setErrorVisible] = useState(false);
+
+  const formatDate = (dateString: string) => {
+    const options: Intl.DateTimeFormatOptions = {
+      weekday: 'long', 
+      day: '2-digit',
+      month: 'long',
+    };
+  
+    const date = new Date(dateString);
+    const formattedDate = date.toLocaleDateString('pt-BR', options);
+    const formattedTime = date.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+  
+    return `${formattedTime}, ${formattedDate}`;
+  };
+
+  useEffect(() => {
+    console.log('Route Params:', route.params);
+    console.log('Appointment ID:', appointmentId);
+    const loadAppointmentDetails = async () => {
+      try {
+        const details: AppointmentDetails = await fetchAppointmentDetails(appointmentId);
+      setAppointmentDetails(details);
+        console.log('Dados do compromisso:', details);
+      } catch (error) {
+        console.error('Erro ao buscar detalhes do compromisso:', error);
+      }
+    };
+
+    loadAppointmentDetails();
+  }, [appointmentId]);
 
   const handleDelete = () => {
     setModalVisible(true);
@@ -63,6 +109,29 @@ export function ExcluiAgenda() {
     }
   };
 
+  if (!appointmentDetails) {
+    return (
+      <Container>
+        <Header>
+          <UserWrapper>
+            <BackButton onPress={() => navigation.goBack()}>
+              <ArrowIcon name="chevron-left" />
+            </BackButton>
+            <AppName>
+              <Title>Edu</Title>
+              <TitleC>Sync</TitleC>
+            </AppName>
+          </UserWrapper>
+        </Header>
+        <FormContainer>
+          <ThemeContainer>
+            <Input>Carregando...</Input>
+          </ThemeContainer>
+        </FormContainer>
+      </Container>
+    );
+  }
+
   return (
     <Container>
       <Header>
@@ -79,27 +148,24 @@ export function ExcluiAgenda() {
       
       <FormContainer>
         <ThemeContainer>
-          <Input> Nome do Compromisso </Input>
+          <Input>{appointmentDetails.name || 'Sem nome'}</Input>
         </ThemeContainer>
         <Divider />
 
-        <Input>Nome</Input>
+        <Input>{appointmentDetails.event_memberships[0]?.user_name || 'Sem convidado'}</Input>
         
-        <Input>Email</Input>
+        <Input>{appointmentDetails.event_memberships[0]?.user_email || 'Sem email'}</Input>
         
-        <DateInput>09:00, Sexta-feira, 23 de julho</DateInput>
-        
-        <TextArea multiline>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam id lorem pellentesque
-           diam tincidunt sodales vitae et mauris. Vivamus lacus nunc, ultricies ut velit eu, dapibus tempus urna.
-            Curabitur ultrices ligula arcu, vel convallis tellus pulvinar id. Praesent eget arcu lacus. Quisque 
-            consectetur venenatis pellentesque. Etiam sagittis tortor mi, nec ultrices velit mattis nec. Proin mattis sollicitudin gravida. Quisque faucibus viverra dolor.</TextArea>
+        <DateInput>{formatDate(appointmentDetails.start_time)}</DateInput>
+
+        <TextArea multiline>{appointmentDetails.meeting_notes_plain || 'Sem notas'}</TextArea>
         
         <SaveButton onPress={handleDelete}>
-          <SaveButtonText>Excluir</SaveButtonText>
+          <SaveButtonText>Excluir Agendamento</SaveButtonText>
         </SaveButton>
       </FormContainer>
 
-      <CancelConfirmation 
+      <DeleteConfirmation 
         visible={modalVisible} 
         onCancel={handleCancel} 
         onConfirm={handleConfirm} 
@@ -115,8 +181,7 @@ export function ExcluiAgenda() {
     </Container>
   );
 }
-
-const CancelConfirmation = ({ visible, onCancel, onConfirm }) => {
+const DeleteConfirmation = ({ visible, onCancel, onConfirm }: { visible: boolean, onCancel: () => void, onConfirm: () => void }) => {
   return (
     <Modal transparent visible={visible} animationType="fade">
       <Overlay>

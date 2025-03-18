@@ -83,8 +83,8 @@ export const ScheduleGrid = styled.View`
   justify-content: space-evenly;
 `;
 
-export const ScheduleButton = styled.TouchableOpacity`
-  width: ${RFPercentage(11.5)}px;
+export const ScheduleButton = styled.TouchableOpacity<{ noAvailability?: boolean }>`
+  min-width: ${({ noAvailability }: { noAvailability?: boolean }) => (noAvailability ? RFPercentage(25) : RFPercentage(11.5))}px;
   align-items: center;
   justify-content: center;
   background-color: ${({ theme }) => theme.colors.menu_button_dark_blue};

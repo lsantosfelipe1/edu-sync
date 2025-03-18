@@ -57,16 +57,16 @@ export function Login() {
             {
               code: response.params.code,
               clientId: CALENDLY_CLIENT_ID!,
-              clientSecret: CALENDLY_CLIENT_SECRET,
+              clientSecret: CALENDLY_CLIENT_SECRET!,
               redirectUri,
               extraParams: {
                 grant_type: 'authorization_code',
-                code_verifier: request?.codeVerifier,
+                code_verifier: request?.codeVerifier || '',
               },
             },
             { tokenEndpoint: TOKEN_ENDPOINT }
           );
-  
+
           await AsyncStorage.setItem('accessToken', tokenResponse.accessToken);
           navigation.navigate('Home');
         } catch (error) {
@@ -97,7 +97,7 @@ export function Login() {
         <ButtonWrapper>
           <LoginButton onPress={() => promptAsync()}>
             <ButtonIcon source={require('../../assets/google.png')} />
-            <ButtonText>Continue com Google</ButtonText>
+            <ButtonText>Continue com Calendly</ButtonText>
           </LoginButton>
         </ButtonWrapper>
       </Container>

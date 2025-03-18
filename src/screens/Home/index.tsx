@@ -1,8 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useContext } from 'react';
 import { useNavigation, NavigationProp } from '@react-navigation/native';
 import { Modal } from 'react-native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import { getUserData } from '../../services/api';
+import { AuthContext } from '../../contexts/AuthContext';
 import { 
   Container,
   Header,
@@ -42,32 +41,11 @@ type RootStackParamList = {
 
 export function Home() {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
+  const { user, signOut } = useContext(AuthContext);
   const [modalVisible, setModalVisible] = useState(false);
-  const [userName, setUserName] = useState('');
-  const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
-
-  useEffect(() => {
-    const fetchUserName = async () => {
-      try {
-        const accessToken = await AsyncStorage.getItem('accessToken');
-        if (accessToken) {
-          const userData = await getUserData(accessToken);
-          setUserName(userData.resource.name); 
-          setAvatarUrl(userData.resource.avatar_url); 
-        } else {
-          navigation.navigate('Login');
-        }
-      } catch (error) {
-        console.error('Error fetching user data:', error);
-        navigation.navigate('Login');
-      }
-    };
-  
-    fetchUserName();
-  }, [navigation]);
+  console.log('user:', user?.uri);
 
   const handleLogout = async () => {
-    await AsyncStorage.removeItem('accessToken');
     setModalVisible(true);
   };
 
@@ -75,8 +53,9 @@ export function Home() {
     setModalVisible(false);
   };
 
-  const handleConfirm = () => {
+  const handleConfirm = async () => {
     setModalVisible(false);
+    await signOut();
     navigation.navigate('Login');
   };
 
@@ -96,13 +75,13 @@ export function Home() {
 
       <AvatarWrapper>
         <AvatarBackground>
-          {avatarUrl ? (
-            <Avatar source={{ uri: avatarUrl }} />
+          {user?.avatar_url ? (
+            <Avatar source={{ uri: user.avatar_url }} />
           ) : (
             <AvatarIcon name="person" />
           )}
         </AvatarBackground>
-        <WelcomeText>Bem-vindo, {userName}!</WelcomeText>
+        <WelcomeText>Bem-vindo, {user?.name}!</WelcomeText>
       </AvatarWrapper>
 
       <MenuGrid>

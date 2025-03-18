@@ -1,6 +1,8 @@
-import React from 'react';
-import { useNavigation } from '@react-navigation/native';
+import React, { useContext } from 'react';
+import { useNavigation, NavigationProp } from '@react-navigation/native';
 import { FlatList } from 'react-native';
+import { RootStackParamList } from '../../routes';
+import { AppointmentContext } from '../../contexts/AppointmentContext';
 import { 
   Container,
   Header,
@@ -16,25 +18,50 @@ import {
   AppointmentCard,
   ArrowIcon,
   AppointmentText,
-  StatusIcon
+  StatusIcon,
 } from './style';
 
-const appointments = [
-  { id: '1', name: 'Nome do compromisso, 14/07, 15:00h', status: 'completed' },
-  { id: '2', name: 'Nome do compromisso, 14/07, 15:00h', status: 'completed' },
-  { id: '3', name: 'Nome do compromisso, 14/07, 15:00h', status: 'completed' },
-  { id: '4', name: 'Nome do compromisso, 14/07, 15:00h', status: 'completed' },
-  { id: '5', name: 'Nome do compromisso, 14/07, 15:00h', status: 'scheduled' }
-];
-
 export function Agendamentos() {
-  const navigation = useNavigation();
-  
+  const navigation = useNavigation<NavigationProp<RootStackParamList>>();
+  const { completedAppointments, scheduledAppointments, loading } = useContext(AppointmentContext);
+
+  const handleNavigate = (screen: keyof RootStackParamList, params?: any) => {
+    navigation.navigate(screen, params);
+  };
+
+  const formatDate = (dateString: string) => {
+    const options: Intl.DateTimeFormatOptions = { day: '2-digit', month: '2-digit' };
+    const date = new Date(dateString);
+    const formattedDate = date.toLocaleDateString('pt-BR', options);
+    const formattedTime = date.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+
+    return `${formattedDate}, ${formattedTime}h`;
+  };
+
+  if (loading) {
+    return (
+      <Container>
+        <Header>
+          <UserWrapper>
+            <MenuButton onPress={() => handleNavigate('Menu')}>
+              <MenuIcon name="menu" />
+            </MenuButton>
+            <AppName>
+              <Title>Edu</Title>
+              <TitleC>Sync</TitleC>
+            </AppName>
+          </UserWrapper>
+        </Header>
+        <TitleScreen>Carregando agendamentos...</TitleScreen>
+      </Container>
+    );
+  }
+
   return (
     <Container>
       <Header>
         <UserWrapper>
-          <MenuButton onPress={() => navigation.navigate('Menu')}>
+          <MenuButton onPress={() => handleNavigate('Menu')}>
             <MenuIcon name="menu" />
           </MenuButton>
           <AppName>
@@ -46,31 +73,47 @@ export function Agendamentos() {
 
       <TitleScreen>Agendamentos</TitleScreen>
 
-      <Section>
+      <Section style={{ flex: 1 }}>
         <SectionTitle>Concluídos</SectionTitle>
         <FlatList
-          data={appointments.filter(item => item.status === 'completed')}
-          keyExtractor={item => item.id}
+          data={completedAppointments}
+          keyExtractor={item => item.uri}
+          ListEmptyComponent={<AppointmentText>Nenhum agendamento concluído.</AppointmentText>}
           renderItem={({ item }) => (
             <AppointmentCard>
               <StatusIcon name="check-circle" />
-              <AppointmentText>{item.name}</AppointmentText>
-              <ArrowIcon name="chevron-right" onPress={() => navigation.navigate('ExcluiAgenda')} />
+              <AppointmentText>{item.name}, {formatDate(item.start_time)}</AppointmentText>
+              <ArrowIcon
+                name="chevron-right"
+                onPress={() => {
+                  const uuid = item.uri.split("/").pop();
+                  console.log('Navegando para ExcluiAgenda com ID:', uuid);
+                  handleNavigate('ExcluiAgenda', { appointmentId: uuid });
+                }}
+              />
             </AppointmentCard>
           )}
         />
       </Section>
 
-      <Section>
+      <Section style={{ flex: 1 }}>
         <SectionTitle>Agendados</SectionTitle>
         <FlatList
-          data={appointments.filter(item => item.status === 'scheduled')}
-          keyExtractor={item => item.id}
+          data={scheduledAppointments}
+          keyExtractor={item => item.uri}
+          ListEmptyComponent={<AppointmentText>Nenhum agendamento futuro.</AppointmentText>}
           renderItem={({ item }) => (
             <AppointmentCard>
               <StatusIcon name="calendar-today" />
-              <AppointmentText>{item.name}</AppointmentText>
-              <ArrowIcon name="chevron-right" onPress={() => navigation.navigate('CancelaAgenda')} />
+              <AppointmentText>{item.name}, {formatDate(item.start_time)}</AppointmentText>
+              <ArrowIcon
+                name="chevron-right"
+                onPress={() => {
+                  const uuid = item.uri.split("/").pop();
+                  console.log('Navegando para CancelaAgenda com ID:', uuid);
+                  handleNavigate('CancelaAgenda', { appointmentId: uuid });
+                }}
+              />
             </AppointmentCard>
           )}
         />
