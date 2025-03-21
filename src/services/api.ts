@@ -28,6 +28,7 @@ interface Event {
   id: string;
   uri: string;
   name: string;
+  status: string;
   start_time: string;
   end_time: string;
 }
@@ -147,31 +148,33 @@ export const refreshAccessToken = async (): Promise<string> => {
 
 export const fetchAppointments = async (): Promise<{ completed: Event[]; scheduled: Event[] }> => {
   let userUri: string | null = null;
+
   try {
     accessToken = await getStoredAccessToken();
 
     if (!accessToken) {
+      console.error('Token de acesso não disponível.');
       throw new Error('Token de acesso não disponível.');
     }
 
     const userData: AxiosResponse<UserData> = await axios.get('https://api.calendly.com/users/me', {
       headers: {
-        Authorization: `Bearer ${accessToken}`,
+        Authorization: `Bearer ${calendlyToken}`,
       },
     });
 
-    const userUri = userData.data.resource.uri;
-    
+    userUri = userData.data.resource.uri;
+
     const response: AxiosResponse<{ collection: Event[] }> = await api.get('/scheduled_events', {
       headers: {
-        Authorization: `Bearer ${accessToken}`,
+        Authorization: `Bearer ${calendlyToken}`,
       },
       params: {
         user: userUri,
       },
     });
 
-    const events = response.data.collection;
+    const events = response.data.collection.filter((event) => event.status !== 'canceled');
     const completed = events.filter((event) => new Date(event.end_time) < new Date());
     const scheduled = events.filter((event) => new Date(event.end_time) >= new Date());
 
@@ -190,7 +193,7 @@ export const fetchAppointments = async (): Promise<{ completed: Event[]; schedul
         },
       });
 
-      const retryEvents = retryResponse.data.collection;
+      const retryEvents = retryResponse.data.collection.filter((event) => event.status !== 'canceled');
       const completed = retryEvents.filter((event) => new Date(event.end_time) < new Date());
       const scheduled = retryEvents.filter((event) => new Date(event.end_time) >= new Date());
 
@@ -204,25 +207,16 @@ export const fetchAppointments = async (): Promise<{ completed: Event[]; schedul
 
 export const fetchAppointmentDetails = async (appointmentId: string): Promise<AppointmentDetails> => {
   try {
-    accessToken = await getStoredAccessToken();
-    console.log('Appointment ID:', appointmentId);
-
-    if (!accessToken) {
-      throw new Error('Token de acesso não disponível.');
-    }
 
     const response: AxiosResponse<{ resource: AppointmentDetails }> = await api.get(`/scheduled_events/${appointmentId}`, {
       headers: {
-        Authorization: `Bearer ${accessToken}`,
+        Authorization: `Bearer ${calendlyToken}`,
       },
     });
 
     return response.data.resource;
   } catch (error: any) {
     if (error.response && error.response.status === 401) {
-      console.log('Token expirado. Atualizando token...');
-      accessToken = await refreshAccessToken();
-
       const retryResponse: AxiosResponse<{ resource: AppointmentDetails }> = await api.get(`/scheduled_events/${appointmentId}`, {
         headers: {
           Authorization: `Bearer ${accessToken}`,
@@ -237,7 +231,7 @@ export const fetchAppointmentDetails = async (appointmentId: string): Promise<Ap
   }
 };
 
-export const fetchCalendly = async () => {
+const eventTypes = async () => {
   try {
     if (!calendlyLink) {
       throw new Error('Link do Calendly não fornecido.');
@@ -271,9 +265,17 @@ export const fetchCalendly = async () => {
     if (!event) {
       throw new Error('Evento não encontrado.');
     }
-  
-    const eventUri = event.uri;
-  
+    return  event.uri;
+  } catch (error) {
+    const err = error as any;
+    console.error('Erro ao buscar os tipos de evento:', err.response ? err.response.data : err.message);
+    throw error;
+  }
+};
+
+export const fetchCalendly = async () => {
+  try {
+    const eventUri = await eventTypes();
     const startTime = new Date(Date.now() + 60000).toISOString();
     const endTime = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString(); 
   
@@ -292,6 +294,54 @@ export const fetchCalendly = async () => {
   } catch (error) {
     const err = error as any;
     console.error('Erro ao buscar os horários disponíveis na agenda:', err.response ? err.response.data : err.message);
+    throw error;
+  }
+};
+
+export const createAppointment = async (email: String) => {
+  try {
+    const event = await eventTypes();
+    const response = await axios.post(
+      'https://api.calendly.com/scheduling_links',
+      {
+        max_event_count: 1,
+        owner: event,
+        owner_type: 'EventType',
+        invitee_email: email,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${calendlyToken}`,
+          'Content-Type': 'application/json',
+        },
+      }
+    );
+
+    return response.data.resource.booking_url;
+  } catch (error: any) {
+    console.error('Erro ao gerar o link de agendamento:', error.response?.data || error.message);
+    throw error;
+  }
+};
+
+export const cancelAppointment = async (appointmentId: string): Promise<void> => {
+  try {
+    const response = await axios.post(
+      `https://api.calendly.com/scheduled_events/${appointmentId}/cancellation`,
+      {
+        reason: 'Cancelado pelo usuário',
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${calendlyToken}`,
+          'Content-Type': 'application/json',
+        },
+      }
+    );
+
+    console.log('Evento cancelado com sucesso:', response.data);
+  } catch (error: any) {
+    console.error('Erro ao cancelar o evento:', error.response ? error.response.data : error.message);
     throw error;
   }
 };

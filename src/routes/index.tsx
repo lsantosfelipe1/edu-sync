@@ -7,7 +7,6 @@ import { Menu } from '../screens/Menu';
 import { Schedule } from '../screens/Schedule';
 import { Agendamentos } from '../screens/Agendamentos';
 import { Login } from '../screens/Login';
-import { ConfirmaAgenda } from '../screens/ConfirmaAgenda';
 import { CancelaAgenda } from '../screens/CancelaAgenda';
 import { ExcluiAgenda } from '../screens/ExcluiAgenda';
 
@@ -38,7 +37,6 @@ export function Routes() {
             <Stack.Screen name="Agendamentos" component={Agendamentos} />
             <Stack.Screen name="CancelaAgenda" component={CancelaAgenda} />
             <Stack.Screen name="ExcluiAgenda" component={ExcluiAgenda} />
-            <Stack.Screen name="ConfirmaAgenda" component={ConfirmaAgenda} />
           </>
         )}
       </Stack.Navigator>
@@ -55,5 +53,4 @@ export type RootStackParamList = {
     Agendamentos: undefined;
     CancelaAgenda: { appointmentId: string };
     ExcluiAgenda: { appointmentId: string };
-    ConfirmaAgenda: { appointmentId: string };
   };

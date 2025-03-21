@@ -123,7 +123,7 @@ export const TextArea = styled.TextInput.attrs(({ theme }) => ({
 `;
 
 export const SaveButton = styled.TouchableOpacity`
-  background-color: ${({ theme }) => theme.colors.warning};
+  background-color: ${({ theme }) => theme.colors.secondary_light};
   width: 90%;
   height: ${RFPercentage(6)}px;
   padding: ${RFPercentage(2)}px;
@@ -144,68 +144,4 @@ export const Divider = styled.View`
   height: 1px;
   background-color: ${({ theme }) => theme.colors.text_light};
   margin-bottom: ${RFPercentage(3)}px; 
-`;
-
-export const Overlay = styled.View`
-  flex: 1;
-  justify-content: center;
-  align-items: center;
-  background-color: ${({ theme }) => theme.colors.overlay};
-`;
-
-export const ModalContainer = styled.View`
-  background-color: ${({ theme }) => theme.colors.modal_container};
-  padding: ${RFPercentage(2)}px;
-  border-radius: ${RFPercentage(2)}px;
-  align-items: center;
-  width: ${RFPercentage(40)}px;
-`;
-
-export const Warning = styled.Text`
-  font-size: ${RFPercentage(8)}px;
-  color: ${({ theme }) => theme.colors.text};
-`;
-
-export const Message = styled.Text`
-  font-family: ${({ theme }) => theme.fonts.regular};
-  color: ${({ theme }) => theme.colors.text};
-  font-size: ${RFPercentage(2)}px;
-  margin-vertical: ${RFPercentage(1)}px;
-`;
-
-export const WarnMessage = styled.Text`
-  color: ${({ theme }) => theme.colors.text};
-  font-size: ${RFPercentage(1.5)}px;
-  font-family: ${({ theme }) => theme.fonts.light_italic};
-  margin-vertical: ${RFPercentage(1)}px;
-`;
-
-export const ButtonContainer = styled.View`
-  flex-direction: row;
-  margin-top: ${RFPercentage(2)}px;
-`;
-
-export const CancelButton = styled.TouchableOpacity`
-  background-color: ${({ theme }) => theme.colors.cancel_button};
-  padding: ${RFPercentage(2)}px;
-  border-radius: ${RFPercentage(1)}px;
-  margin-right: ${RFPercentage(1)}px;
-`;
-
-export const ConfirmButton = styled.TouchableOpacity`
-  background-color: ${({ theme }) => theme.colors.warning};
-  padding: ${RFPercentage(2)}px;
-  border-radius: ${RFPercentage(1)}px;
-`;
-
-export const CancelText = styled.Text`
-  font-family: ${({ theme }) => theme.fonts.bold};
-  color: white;
-  font-size: ${RFPercentage(2)}px;
-`;
-
-export const ConfirmText = styled.Text`
-  font-family: ${({ theme }) => theme.fonts.bold};
-  color: white;
-  font-size: ${RFPercentage(2)}px;
 `;

@@ -2,6 +2,7 @@ import React, { useState, useEffect, useContext } from 'react';
 import { Modal } from 'react-native';
 import { useNavigation, useRoute, RouteProp } from '@react-navigation/native';
 import { fetchAppointmentDetails } from '../../services/api';
+import { cancelAppointment } from '../../services/api';
 import { RootStackParamList } from '../../routes';
 import { 
   Container, 
@@ -69,13 +70,10 @@ export function CancelaAgenda() {
   };
 
   useEffect(() => {
-    console.log('Route Params:', route.params);
-    console.log('Appointment ID:', appointmentId);
     const loadAppointmentDetails = async () => {
       try {
         const details: AppointmentDetails = await fetchAppointmentDetails(appointmentId);
       setAppointmentDetails(details);
-        console.log('Dados do compromisso:', details);
       } catch (error) {
         console.error('Erro ao buscar detalhes do compromisso:', error);
       }
@@ -92,16 +90,20 @@ export function CancelaAgenda() {
     setModalVisible(false);
   };
 
-  const handleConfirm = () => {
+  const handleConfirm = async () => {
     setModalVisible(false);
-    const isSuccess = Math.random() > 0.5;
-    if (isSuccess) {
+    setSuccessVisible(false);
+    setErrorVisible(false);
+  
+    try {
+      await cancelAppointment(appointmentId);
       setSuccessVisible(true);
       setTimeout(() => {
         setSuccessVisible(false);
         navigation.goBack();
       }, 3000);
-    } else {
+    } catch (error) {
+      console.error('Erro ao cancelar o agendamento:', error);
       setErrorVisible(true);
       setTimeout(() => {
         setErrorVisible(false);

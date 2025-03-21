@@ -43,7 +43,6 @@ export function Home() {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
   const { user, signOut } = useContext(AuthContext);
   const [modalVisible, setModalVisible] = useState(false);
-  console.log('user:', user?.uri);
 
   const handleLogout = async () => {
     setModalVisible(true);

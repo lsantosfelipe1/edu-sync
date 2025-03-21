@@ -29,8 +29,6 @@ export function AppointmentProvider({ children }: AppointmentProviderProps) {
     setLoading(true);
     try {
       const { completed, scheduled } = await fetchAppointments();
-      console.log('Agendamentos concluídos:', completed);
-      console.log('Agendamentos agendados:', scheduled);
       setCompletedAppointments(completed);
       setScheduledAppointments(scheduled);
     } catch (error) {

@@ -1,10 +1,16 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { ScrollView } from 'react-native';
 import { useTheme } from 'styled-components';
 import { Calendar, LocaleConfig } from 'react-native-calendars';
 import { useNavigation, NavigationProp } from '@react-navigation/native';
 import { ptBR } from '../../utils/localeCalendarConfig';
-import { fetchCalendly } from '../../services/api';
+import { fetchCalendly, fetchAppointments} from '../../services/api';
+import { ErrorOverlay } from '../../Components/Erro';
+import { SuccessOverlay } from '../../Components/Sucesso';
+import { createAppointment } from '../../services/api';
+import { Linking } from 'react-native';
+import { AuthContext } from '../../contexts/AuthContext';
+
 import {
   Container,
   Header,
@@ -34,11 +40,14 @@ LocaleConfig.defaultLocale = 'pt-br';
 
 export function Schedule() {
   const theme = useTheme();
+  const { user, signOut } = useContext(AuthContext);
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
   const [selectedDate, setSelectedDate] = useState('');
   const [appointments, setAppointments] = useState<any[]>([]);
   const [markedDates, setMarkedDates] = useState<any>({});
   const [availableTimes, setAvailableTimes] = useState<string[]>([]);
+  const [successVisible, setSuccessVisible] = useState(false);
+  const [errorVisible, setErrorVisible] = useState(false);
 
   const capitalizeFirstLetter = (str: string) => {
     if (!str) return str;
@@ -48,12 +57,10 @@ export function Schedule() {
   useEffect(() => {
     const loadAppointments = async () => {
       try {
-        // Busca os eventos do Calendly
         const events = await fetchCalendly();
 
-        // Marca as datas no calendário
         const marked = events.reduce((acc: any, event: any) => {
-          const date = event.start_time.split('T')[0]; // Extrai a data do evento
+          const date = event.start_time.split('T')[0];
           if (!acc[date]) {
             acc[date] = { marked: true, selectedColor: theme.colors.menu_button_dark_blue };
           }
@@ -70,23 +77,70 @@ export function Schedule() {
     loadAppointments();
   }, [theme.colors.menu_button_dark_blue]);
 
-  const handleSchedulePress = (hora: string) => {
-    navigation.navigate('ConfirmaAgenda', { date: selectedDate, time: hora });
+  
+  const handleSchedulePress = async (hora: string) => {
+    try {
+      const email = user?.email;
+      if (!email) 
+        throw new Error('Email do usuário não está disponível.');
+      const { scheduled } = await fetchAppointments();
+      if (scheduled.length > 0) {
+        setErrorVisible(true);
+        setErrorVisible(true);
+      setTimeout(() => {
+        setErrorVisible(false);
+      }, 3000);
+        return
+      }
+
+      const bookingLink = await createAppointment(email);
+  
+      if (!bookingLink || typeof bookingLink !== 'string') {
+        throw new Error('Link de agendamento inválido.');
+      }
+      setSuccessVisible(true);
+      setTimeout(() => {
+        setSuccessVisible(false);
+        navigation.goBack();
+      }, 3000);
+      Linking.openURL(bookingLink);
+    } catch (error) {
+      console.error('Erro ao gerar o link de agendamento:', error);
+      setErrorVisible(true);
+      setErrorVisible(true);
+      setTimeout(() => {
+        setErrorVisible(false);
+      }, 3000);
+    }
   };
 
   const handleDayPress = async (day: { dateString: string }) => {
     setSelectedDate(day.dateString);
 
+    setMarkedDates((prevMarkedDates: any) => {
+      const updatedMarkedDates = Object.keys(prevMarkedDates).reduce((acc: any, date) => {
+        acc[date] = { ...prevMarkedDates[date], selected: false };
+        return acc;
+      }, {});
+  
+      return {
+        ...updatedMarkedDates,
+        [day.dateString]: {
+          ...(prevMarkedDates[day.dateString] || {}),
+          selected: true,
+          selectedColor: theme.colors.secondary_light,
+        },
+      };
+    });
+
     try {
-      // Busca os horários disponíveis para a data selecionada
       const availability = await fetchCalendly();
 
-      // Filtra os horários disponíveis para a data selecionada
       const availableTimes = availability
-        .filter((slot: any) => slot.start_time.startsWith(day.dateString)) // Filtra por data selecionada
+        .filter((slot: any) => slot.start_time.startsWith(day.dateString))
         .map((slot: any) => {
           const startTime = new Date(slot.start_time);
-          return startTime.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' }); // Formata a hora
+          return startTime.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' }); 
         });
 
       setAvailableTimes(availableTimes);
@@ -147,6 +201,15 @@ export function Schedule() {
           </ScheduleGrid>
         </ScheduleContainer>
       </ScrollView>
+      
+      <SuccessOverlay 
+        visible={successVisible} 
+      />
+
+      <ErrorOverlay 
+        visible={errorVisible} 
+      />
+
     </Container>
   );
 }

@@ -20,19 +20,7 @@ import {
   SaveButton, 
   SaveButtonText,
   Divider,
-  Overlay,
-  ModalContainer,
-  Warning,
-  Message,
-  WarnMessage,
-  ButtonContainer,
-  CancelButton,
-  ConfirmButton,
-  CancelText,
-  ConfirmText
 } from './style';
-import { ErrorOverlay } from '../../Components/Erro';
-import { SuccessOverlay } from '../../Components/Sucesso';
 
 type AppointmentDetails = {
   name: string;
@@ -46,13 +34,10 @@ type AppointmentDetails = {
 
 export function ExcluiAgenda() {
   const navigation = useNavigation();
-  const route = useRoute<RouteProp<RootStackParamList, 'CancelaAgenda'>>();
+  const route = useRoute<RouteProp<RootStackParamList, 'ExcluiAgenda'>>();
   const { appointmentId } = route.params;
 
   const [appointmentDetails, setAppointmentDetails] = useState<AppointmentDetails | null>(null);
-  const [modalVisible, setModalVisible] = useState(false);
-  const [successVisible, setSuccessVisible] = useState(false);
-  const [errorVisible, setErrorVisible] = useState(false);
 
   const formatDate = (dateString: string) => {
     const options: Intl.DateTimeFormatOptions = {
@@ -83,31 +68,6 @@ export function ExcluiAgenda() {
 
     loadAppointmentDetails();
   }, [appointmentId]);
-
-  const handleDelete = () => {
-    setModalVisible(true);
-  };
-
-  const handleCancel = () => {
-    setModalVisible(false);
-  };
-
-  const handleConfirm = () => {
-    setModalVisible(false);
-    const isSuccess = Math.random() > 0.5;
-    if (isSuccess) {
-      setSuccessVisible(true);
-      setTimeout(() => {
-        setSuccessVisible(false);
-        navigation.goBack();
-      }, 3000);
-    } else {
-      setErrorVisible(true);
-      setTimeout(() => {
-        setErrorVisible(false);
-      }, 3000);
-    }
-  };
 
   if (!appointmentDetails) {
     return (
@@ -160,45 +120,11 @@ export function ExcluiAgenda() {
 
         <TextArea multiline>{appointmentDetails.meeting_notes_plain || 'Sem notas'}</TextArea>
         
-        <SaveButton onPress={handleDelete}>
-          <SaveButtonText>Excluir Agendamento</SaveButtonText>
+        <SaveButton onPress={() => navigation.goBack()}>
+          <SaveButtonText>Voltar</SaveButtonText>
         </SaveButton>
       </FormContainer>
 
-      <DeleteConfirmation 
-        visible={modalVisible} 
-        onCancel={handleCancel} 
-        onConfirm={handleConfirm} 
-      />
-
-      <SuccessOverlay 
-        visible={successVisible} 
-      />
-
-      <ErrorOverlay 
-        visible={errorVisible} 
-      />
     </Container>
   );
 }
-const DeleteConfirmation = ({ visible, onCancel, onConfirm }: { visible: boolean, onCancel: () => void, onConfirm: () => void }) => {
-  return (
-    <Modal transparent visible={visible} animationType="fade">
-      <Overlay>
-        <ModalContainer>
-          <Warning>⚠</Warning>
-          <Message>Realmente deseja excluir?</Message>
-          <WarnMessage>Esta ação será permanente!</WarnMessage>
-          <ButtonContainer>
-            <CancelButton onPress={onCancel}>
-              <CancelText>Cancelar</CancelText>
-            </CancelButton>
-            <ConfirmButton onPress={onConfirm}>
-              <ConfirmText>Sim</ConfirmText>
-            </ConfirmButton>
-          </ButtonContainer>
-        </ModalContainer>
-      </Overlay>
-    </Modal>
-  );
-};

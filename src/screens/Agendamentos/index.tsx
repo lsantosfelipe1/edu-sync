@@ -87,7 +87,6 @@ export function Agendamentos() {
                 name="chevron-right"
                 onPress={() => {
                   const uuid = item.uri.split("/").pop();
-                  console.log('Navegando para ExcluiAgenda com ID:', uuid);
                   handleNavigate('ExcluiAgenda', { appointmentId: uuid });
                 }}
               />
@@ -110,7 +109,6 @@ export function Agendamentos() {
                 name="chevron-right"
                 onPress={() => {
                   const uuid = item.uri.split("/").pop();
-                  console.log('Navegando para CancelaAgenda com ID:', uuid);
                   handleNavigate('CancelaAgenda', { appointmentId: uuid });
                 }}
               />

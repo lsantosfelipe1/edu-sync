@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { useNavigation, NavigationProp } from '@react-navigation/native';
+import { AuthContext } from '../../contexts/AuthContext';
 import { 
     Container,
     Header,
@@ -38,6 +39,7 @@ type RootStackParamList = {
 
 export function Menu() {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
+  const { signOut } = useContext(AuthContext);
   const [modalVisible, setModalVisible] = useState(false);
 
   const handleLogout = () => {
@@ -48,8 +50,9 @@ export function Menu() {
     setModalVisible(false);
   };
 
-  const handleConfirm = () => {
+  const handleConfirm = async () => {
     setModalVisible(false);
+    await signOut();
     navigation.navigate('Login');
   };
 
