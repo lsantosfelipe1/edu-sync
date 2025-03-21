@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { Modal } from 'react-native';
-import { useNavigation, useRoute, RouteProp } from '@react-navigation/native';
+import { useNavigation, useRoute, RouteProp, NavigationProp } from '@react-navigation/native';
 import { fetchAppointmentDetails } from '../../services/api';
+import { fetchAppointments } from '../../services/api';
 import { cancelAppointment } from '../../services/api';
 import { RootStackParamList } from '../../routes';
 import { 
@@ -46,7 +47,7 @@ type AppointmentDetails = {
 };
 
 export function CancelaAgenda() {
-  const navigation = useNavigation();
+  const navigation = useNavigation<NavigationProp<RootStackParamList>>();
   const route = useRoute<RouteProp<RootStackParamList, 'CancelaAgenda'>>();
   const { appointmentId } = route.params;
 

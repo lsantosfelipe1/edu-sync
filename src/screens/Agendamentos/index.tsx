@@ -1,5 +1,5 @@
-import React, { useContext } from 'react';
-import { useNavigation, NavigationProp } from '@react-navigation/native';
+import React, { useContext, useCallback } from 'react';
+import { useNavigation, NavigationProp, useFocusEffect } from '@react-navigation/native';
 import { FlatList } from 'react-native';
 import { RootStackParamList } from '../../routes';
 import { AppointmentContext } from '../../contexts/AppointmentContext';
@@ -23,7 +23,12 @@ import {
 
 export function Agendamentos() {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
-  const { completedAppointments, scheduledAppointments, loading } = useContext(AppointmentContext);
+  const { 
+    completedAppointments, 
+    scheduledAppointments, 
+    loading, 
+    loadAppointments 
+  } = useContext(AppointmentContext);
 
   const handleNavigate = (screen: keyof RootStackParamList, params?: any) => {
     navigation.navigate(screen, params);
@@ -37,6 +42,12 @@ export function Agendamentos() {
 
     return `${formattedDate}, ${formattedTime}h`;
   };
+
+  useFocusEffect(
+    useCallback(() => {
+      loadAppointments();
+    }, [])
+  );
 
   if (loading) {
     return (
@@ -52,7 +63,7 @@ export function Agendamentos() {
             </AppName>
           </UserWrapper>
         </Header>
-        <TitleScreen>Carregando agendamentos...</TitleScreen>
+        <AppointmentText>Carregando agendamentos...</AppointmentText>
       </Container>
     );
   }

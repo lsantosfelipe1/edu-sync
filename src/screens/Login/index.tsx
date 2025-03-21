@@ -35,9 +35,6 @@ export function Login() {
     scheme: 'edusync',
   });
 
-  console.log('CALENDLY_CLIENT_ID:', CALENDLY_CLIENT_ID);
-  console.log('REDIRECT_URI:', redirectUri);
-
   const [request, response, promptAsync] = useAuthRequest(
     {
       clientId: CALENDLY_CLIENT_ID!,

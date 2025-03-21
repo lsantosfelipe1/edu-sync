@@ -23,7 +23,7 @@ export const AppointmentContext = createContext<AppointmentContextData>({} as Ap
 export function AppointmentProvider({ children }: AppointmentProviderProps) {
   const [completedAppointments, setCompletedAppointments] = useState<Appointment[]>([]);
   const [scheduledAppointments, setScheduledAppointments] = useState<Appointment[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
 
   const loadAppointments = async () => {
     setLoading(true);

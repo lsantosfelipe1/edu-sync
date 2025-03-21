@@ -54,13 +54,10 @@ export function ExcluiAgenda() {
   };
 
   useEffect(() => {
-    console.log('Route Params:', route.params);
-    console.log('Appointment ID:', appointmentId);
     const loadAppointmentDetails = async () => {
       try {
         const details: AppointmentDetails = await fetchAppointmentDetails(appointmentId);
       setAppointmentDetails(details);
-        console.log('Dados do compromisso:', details);
       } catch (error) {
         console.error('Erro ao buscar detalhes do compromisso:', error);
       }
