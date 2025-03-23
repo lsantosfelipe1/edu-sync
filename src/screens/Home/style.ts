@@ -76,14 +76,15 @@ export const AvatarIcon = styled(MaterialIcons)`
 export const Avatar = styled.Image`
   width: ${RFPercentage(20)}px;
   height: ${RFPercentage(20)}px;
-  border-radius: ${RFPercentage(7.5)}px;
+  border-radius: ${RFPercentage(10)}px;
   position: absolute;
 `;
 
 export const WelcomeText = styled.Text`
   margin-top: ${RFPercentage(4)}px;
   font-family: ${({ theme }) => theme.fonts.bold};
-  font-size: ${RFPercentage(3.5)}px;
+  font-size: ${RFPercentage(2.5)}px;
+  justify-content: center;
   color: ${({ theme }) => theme.colors.text_dark};
 `;
 
@@ -96,8 +97,8 @@ export const MenuGrid = styled.View`
 `;
 
 export const MenuButtonGrid = styled.TouchableOpacity`
-  width: ${RFPercentage(23)}px;
-  height: ${RFPercentage(23)}px;
+  width: ${RFPercentage(20)}px;
+  height: ${RFPercentage(20)}px;
   background-color: ${({ theme }) => theme.colors.card_background};
   align-items: center;
   justify-content: center;

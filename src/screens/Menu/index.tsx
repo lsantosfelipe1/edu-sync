@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
-import { useNavigation } from '@react-navigation/native';
+import React, { useState, useContext } from 'react';
+import { useNavigation, NavigationProp } from '@react-navigation/native';
+import { AuthContext } from '../../contexts/AuthContext';
 import { 
     Container,
     Header,
@@ -7,10 +8,8 @@ import {
     AppName,
     Title,
     TitleC,
-    MenuIcon,
     MenuWrapper,
     MenuButtonText,
-    MenuButton,
     ButtonIcon,
     HomeButton,
     CalendarButton,
@@ -28,8 +27,17 @@ import {
 } from './style';
 import { Modal } from 'react-native';
 
+type RootStackParamList = {
+  Home: undefined;
+  Menu: undefined;
+  Agendamentos: undefined;
+  Schedule: undefined;
+  Login: undefined;
+};
+
 export function Menu() {
-  const navigation = useNavigation();
+  const navigation = useNavigation<NavigationProp<RootStackParamList>>();
+  const { signOut } = useContext(AuthContext);
   const [modalVisible, setModalVisible] = useState(false);
 
   const handleLogout = () => {
@@ -40,8 +48,9 @@ export function Menu() {
     setModalVisible(false);
   };
 
-  const handleConfirm = () => {
+  const handleConfirm = async () => {
     setModalVisible(false);
+    await signOut();
     navigation.navigate('Login');
   };
 
@@ -83,7 +92,7 @@ export function Menu() {
   );
 }
 
-const CancelConfirmation = ({ visible, onCancel, onConfirm }) => {
+const CancelConfirmation = ({ visible, onCancel, onConfirm }: { visible: boolean, onCancel: () => void, onConfirm: () => void }) => {
   return (
     <Modal transparent visible={visible} animationType="fade">
       <Overlay>

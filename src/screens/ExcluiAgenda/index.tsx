@@ -1,6 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { Modal } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useRoute, RouteProp } from '@react-navigation/native';
+import { fetchAppointmentDetails } from '../../services/api';
+import { RootStackParamList } from '../../routes';
 import { 
   Container, 
   Header, 
@@ -18,50 +20,74 @@ import {
   SaveButton, 
   SaveButtonText,
   Divider,
-  Overlay,
-  ModalContainer,
-  Warning,
-  Message,
-  WarnMessage,
-  ButtonContainer,
-  CancelButton,
-  ConfirmButton,
-  CancelText,
-  ConfirmText
 } from './style';
-import { SuccessOverlay } from '../../Components/Sucesso';
-import { ErrorOverlay } from '../../Components/Erro';
+
+type AppointmentDetails = {
+  name: string;
+  start_time: string;
+  meeting_notes_plain: string | null;
+  event_memberships: {
+    user_name: string;
+    user_email: string;
+  }[];
+};
 
 export function ExcluiAgenda() {
   const navigation = useNavigation();
-  const [modalVisible, setModalVisible] = useState(false);
-  const [successVisible, setSuccessVisible] = useState(false);
-  const [errorVisible, setErrorVisible] = useState(false);
+  const route = useRoute<RouteProp<RootStackParamList, 'ExcluiAgenda'>>();
+  const { appointmentId } = route.params;
 
-  const handleDelete = () => {
-    setModalVisible(true);
+  const [appointmentDetails, setAppointmentDetails] = useState<AppointmentDetails | null>(null);
+
+  const formatDate = (dateString: string) => {
+    const options: Intl.DateTimeFormatOptions = {
+      weekday: 'long', 
+      day: '2-digit',
+      month: 'long',
+    };
+  
+    const date = new Date(dateString);
+    const formattedDate = date.toLocaleDateString('pt-BR', options);
+    const formattedTime = date.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+  
+    return `${formattedTime}, ${formattedDate}`;
   };
 
-  const handleCancel = () => {
-    setModalVisible(false);
-  };
+  useEffect(() => {
+    const loadAppointmentDetails = async () => {
+      try {
+        const details: AppointmentDetails = await fetchAppointmentDetails(appointmentId);
+      setAppointmentDetails(details);
+      } catch (error) {
+        console.error('Erro ao buscar detalhes do compromisso:', error);
+      }
+    };
 
-  const handleConfirm = () => {
-    setModalVisible(false);
-    const isSuccess = Math.random() > 0.5;
-    if (isSuccess) {
-      setSuccessVisible(true);
-      setTimeout(() => {
-        setSuccessVisible(false);
-        navigation.goBack();
-      }, 3000);
-    } else {
-      setErrorVisible(true);
-      setTimeout(() => {
-        setErrorVisible(false);
-      }, 3000);
-    }
-  };
+    loadAppointmentDetails();
+  }, [appointmentId]);
+
+  if (!appointmentDetails) {
+    return (
+      <Container>
+        <Header>
+          <UserWrapper>
+            <BackButton onPress={() => navigation.goBack()}>
+              <ArrowIcon name="chevron-left" />
+            </BackButton>
+            <AppName>
+              <Title>Edu</Title>
+              <TitleC>Sync</TitleC>
+            </AppName>
+          </UserWrapper>
+        </Header>
+        <FormContainer>
+          <ThemeContainer>
+            <Input>Carregando...</Input>
+          </ThemeContainer>
+        </FormContainer>
+      </Container>
+    );
+  }
 
   return (
     <Container>
@@ -79,61 +105,23 @@ export function ExcluiAgenda() {
       
       <FormContainer>
         <ThemeContainer>
-          <Input> Nome do Compromisso </Input>
+          <Input>{appointmentDetails.name || 'Sem nome'}</Input>
         </ThemeContainer>
         <Divider />
 
-        <Input>Nome</Input>
+        <Input>{appointmentDetails.event_memberships[0]?.user_name || 'Sem convidado'}</Input>
         
-        <Input>Email</Input>
+        <Input>{appointmentDetails.event_memberships[0]?.user_email || 'Sem email'}</Input>
         
-        <DateInput>09:00, Sexta-feira, 23 de julho</DateInput>
+        <DateInput>{formatDate(appointmentDetails.start_time)}</DateInput>
+
+        <TextArea multiline>{appointmentDetails.meeting_notes_plain || 'Sem notas'}</TextArea>
         
-        <TextArea multiline>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam id lorem pellentesque
-           diam tincidunt sodales vitae et mauris. Vivamus lacus nunc, ultricies ut velit eu, dapibus tempus urna.
-            Curabitur ultrices ligula arcu, vel convallis tellus pulvinar id. Praesent eget arcu lacus. Quisque 
-            consectetur venenatis pellentesque. Etiam sagittis tortor mi, nec ultrices velit mattis nec. Proin mattis sollicitudin gravida. Quisque faucibus viverra dolor.</TextArea>
-        
-        <SaveButton onPress={handleDelete}>
-          <SaveButtonText>Excluir</SaveButtonText>
+        <SaveButton onPress={() => navigation.goBack()}>
+          <SaveButtonText>Voltar</SaveButtonText>
         </SaveButton>
       </FormContainer>
 
-      <CancelConfirmation 
-        visible={modalVisible} 
-        onCancel={handleCancel} 
-        onConfirm={handleConfirm} 
-      />
-
-      <SuccessOverlay 
-        visible={successVisible} 
-      />
-
-      <ErrorOverlay 
-        visible={errorVisible} 
-      />
     </Container>
   );
 }
-
-const CancelConfirmation = ({ visible, onCancel, onConfirm }) => {
-  return (
-    <Modal transparent visible={visible} animationType="fade">
-      <Overlay>
-        <ModalContainer>
-          <Warning>⚠</Warning>
-          <Message>Realmente deseja excluir?</Message>
-          <WarnMessage>Esta ação será permanente!</WarnMessage>
-          <ButtonContainer>
-            <CancelButton onPress={onCancel}>
-              <CancelText>Cancelar</CancelText>
-            </CancelButton>
-            <ConfirmButton onPress={onConfirm}>
-              <ConfirmText>Sim</ConfirmText>
-            </ConfirmButton>
-          </ButtonContainer>
-        </ModalContainer>
-      </Overlay>
-    </Modal>
-  );
-};

@@ -23,7 +23,7 @@ export function Erro() {
   );
 }
 
-export const ErrorOverlay = ({ visible }) => {
+export const ErrorOverlay = ({ visible }: { visible: boolean }) => {
   return (
     <Modal transparent visible={visible} animationType="fade">
       <Overlay>
@@ -31,10 +31,10 @@ export const ErrorOverlay = ({ visible }) => {
         <Warning>
             {}
             <LottieView
-              source={{ uri: 'https://lottie.host/35480a3c-135f-4d79-b3ec-1eb3b14ce60a/s2Oymke3GC.json' }}
+              source={{ uri: 'https://lottie.host/b2cf600f-e10d-458a-8d1e-d32a53d0545d/JeysaxOUIY.json' }}
               autoPlay
               loop
-              style={{ width: 100, height: 100 }}
+              style={{ width: 90, height: 90 }}
             />
           </Warning>
           <Message> Erro! </Message>

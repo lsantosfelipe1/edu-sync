@@ -23,7 +23,7 @@ export function Sucesso() {
   );
 }
 
-export const SuccessOverlay = ({ visible }) => {
+export const SuccessOverlay: React.FC<{ visible: boolean }> = ({ visible }) => {
   return (
     <Modal transparent visible={visible} animationType="fade">
       <Overlay>

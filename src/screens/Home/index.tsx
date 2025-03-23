@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
-import { useNavigation } from '@react-navigation/native';
+import React, { useState, useContext } from 'react';
+import { useNavigation, NavigationProp } from '@react-navigation/native';
 import { Modal } from 'react-native';
+import { AuthContext } from '../../contexts/AuthContext';
 import { 
   Container,
   Header,
@@ -30,11 +31,20 @@ import {
   ConfirmText,
 } from './style';
 
+type RootStackParamList = {
+  Home: undefined;
+  Menu: undefined;
+  Agendamentos: undefined;
+  Schedule: undefined;
+  Login: undefined;
+};
+
 export function Home() {
-  const navigation = useNavigation();
+  const navigation = useNavigation<NavigationProp<RootStackParamList>>();
+  const { user, signOut } = useContext(AuthContext);
   const [modalVisible, setModalVisible] = useState(false);
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
     setModalVisible(true);
   };
 
@@ -42,8 +52,9 @@ export function Home() {
     setModalVisible(false);
   };
 
-  const handleConfirm = () => {
+  const handleConfirm = async () => {
     setModalVisible(false);
+    await signOut();
     navigation.navigate('Login');
   };
 
@@ -63,10 +74,13 @@ export function Home() {
 
       <AvatarWrapper>
         <AvatarBackground>
-          <AvatarIcon name="person" />
-          <Avatar/>
+          {user?.avatar_url ? (
+            <Avatar source={{ uri: user.avatar_url }} />
+          ) : (
+            <AvatarIcon name="person" />
+          )}
         </AvatarBackground>
-        <WelcomeText>Bem-vindo, ********!</WelcomeText>
+        <WelcomeText>Bem-vindo, {user?.name}!</WelcomeText>
       </AvatarWrapper>
 
       <MenuGrid>
@@ -100,7 +114,7 @@ export function Home() {
   );
 }
 
-const CancelConfirmation = ({ visible, onCancel, onConfirm }) => {
+const CancelConfirmation = ({ visible, onCancel, onConfirm }: { visible: boolean, onCancel: () => void, onConfirm: () => void }) => {
   return (
     <Modal transparent visible={visible} animationType="fade">
       <Overlay>
