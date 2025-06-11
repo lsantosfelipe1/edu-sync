@@ -25,8 +25,6 @@ Este projeto está sob a licença MIT. Consulte o arquivo [LICENSE](LICENSE) par
 
 ### 🧑‍💻 Desenvolvido por:
 - **Felipe Santos** ([GitHub](https://github.com/lsantosfelipe1))
-- **Luiz Augusto**  ([GitHub](https://github.com/LuizzzM))
-- **Marcos Cabral** ([GitHub](https://github.com/Markkjjk))
 
 Se tiver alguma dúvida ou sugestão, sinta-se à vontade para abrir uma issue! 🚀
 
