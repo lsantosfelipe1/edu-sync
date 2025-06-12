@@ -4,7 +4,9 @@
     "scheme": "edusync",
     "slug": "edusync",
     "version": "1.0.0",
-    
+    "platforms": [
+      "android"
+    ],
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
@@ -28,6 +30,12 @@
     },
     "plugins": [
       "expo-font"
-    ]
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "e18f3394-3184-4345-93de-35329d34b4be"
+      }
+    },
+    "owner": "lsantosfelipe0"
   }
 }
