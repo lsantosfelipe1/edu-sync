@@ -37,6 +37,12 @@
         "projectId": "e18f3394-3184-4345-93de-35329d34b4be"
       }
     },
-    "owner": "lsantosfelipe0"
+    "owner": "lsantosfelipe0",
+    "runtimeVersion": {
+      "policy": "appVersion"
+    },
+    "updates": {
+      "url": "https://u.expo.dev/e18f3394-3184-4345-93de-35329d34b4be"
+    }
   }
 }
